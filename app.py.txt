@@ -1,0 +1,210 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+
+st.set_page_config(
+    page_title="Industrial IoT Cyber Security",
+    page_icon="??",
+    layout="wide"
+)
+
+# ======================
+# Custom CSS
+# ======================
+
+st.markdown("""
+<style>
+.main {
+    background-color: #0d1117;
+}
+
+.stApp {
+    background: linear-gradient(135deg,#0f172a,#111827,#1e293b);
+    color: white;
+}
+
+h1,h2,h3,h4 {
+    color:#00e5ff;
+}
+
+.metric-card{
+    background: rgba(255,255,255,0.05);
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 0 15px rgba(0,229,255,0.4);
+}
+
+.sidebar .sidebar-content{
+    background-color:#111827;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ======================
+# Sidebar
+# ======================
+
+st.sidebar.title("?? IIoT Security")
+menu = st.sidebar.radio(
+    "Navigation",
+    [
+        "Dashboard",
+        "Threats",
+        "Security Measures",
+        "Risk Analysis"
+    ]
+)
+
+# ======================
+# Dashboard
+# ======================
+
+if menu == "Dashboard":
+
+    st.title("Industrial IoT Cyber Security Dashboard")
+
+    st.markdown("""
+    ### Protecting Smart Factories and Connected Industrial Systems
+    """)
+
+    col1,col2,col3,col4 = st.columns(4)
+
+    with col1:
+        st.markdown("""
+        <div class="metric-card">
+        <h2>250+</h2>
+        <p>Connected Devices</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+        <div class="metric-card">
+        <h2>85%</h2>
+        <p>Threat Detection Rate</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
+        st.markdown("""
+        <div class="metric-card">
+        <h2>98%</h2>
+        <p>Network Availability</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col4:
+        st.markdown("""
+        <div class="metric-card">
+        <h2>12</h2>
+        <p>Critical Alerts</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    data = pd.DataFrame({
+        "Threat":["Malware","DDoS","Phishing","Ransomware","Insider"],
+        "Incidents":[45,30,20,15,10]
+    })
+
+    fig = px.bar(
+        data,
+        x="Threat",
+        y="Incidents",
+        title="Industrial Cyber Threat Statistics",
+        color="Incidents"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+# ======================
+# Threats
+# ======================
+
+elif menu == "Threats":
+
+    st.title("Cyber Threat Landscape")
+
+    threat_data = pd.DataFrame({
+        "Threat":["Malware","Ransomware","DDoS","Phishing","Insider"],
+        "Risk":[90,85,70,60,50]
+    })
+
+    fig = px.pie(
+        threat_data,
+        values="Risk",
+        names="Threat",
+        hole=0.5,
+        title="Threat Distribution"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.info("""
+    Industrial IoT environments face multiple security risks including:
+    • Malware Infections
+    • Ransomware Attacks
+    • Denial of Service Attacks
+    • Insider Threats
+    • Phishing Campaigns
+    """)
+
+# ======================
+# Security Measures
+# ======================
+
+elif menu == "Security Measures":
+
+    st.title("Industrial IoT Security Measures")
+
+    measures = [
+        "Multi-Factor Authentication",
+        "Network Segmentation",
+        "Encryption",
+        "Continuous Monitoring",
+        "Patch Management",
+        "Zero Trust Security"
+    ]
+
+    for item in measures:
+        st.success(item)
+
+# ======================
+# Risk Analysis
+# ======================
+
+elif menu == "Risk Analysis":
+
+    st.title("Risk Assessment")
+
+    risk = st.slider(
+        "Current Security Risk Level",
+        0,100,65
+    )
+
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=risk,
+        title={'text':"Risk Score"},
+        gauge={
+            'axis':{'range':[0,100]},
+            'bar':{'color':"red"},
+            'steps':[
+                {'range':[0,40],'color':"green"},
+                {'range':[40,70],'color':"yellow"},
+                {'range':[70,100],'color':"red"}
+            ]
+        }
+    ))
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    if risk < 40:
+        st.success("Low Risk")
+    elif risk < 70:
+        st.warning("Medium Risk")
+    else:
+        st.error("High Risk")
